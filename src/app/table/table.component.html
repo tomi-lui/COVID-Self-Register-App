@@ -1,0 +1,17 @@
+<p>table works!</p>
+
+<table class="table">
+    <tr>
+        <th>Location</th>
+        <th>Person Reported</th>
+        <th>Date of visit</th>
+    </tr>
+
+    <tr *ngFor="let person of peopleInput">
+        <td>{{ person.place }}</td>
+        <td>{{ person.name }}</td>
+        <td>{{ person.date }}</td>
+        <td><button (click)="handleRemoveButton(person.id)">REMOVE</button></td>
+        <td><button (click)="handleInfoButton(person.id)">MORE INFO</button></td> 
+    </tr>
+</table>
