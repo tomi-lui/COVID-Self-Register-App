@@ -1,0 +1,14 @@
+
+<app-map></app-map>
+
+<app-table
+    [peopleInput]="people"
+    (removeId)="handleRemoveButton($event)"
+    (infoId)="handleInfoButton($event)"
+    >
+</app-table>
+
+<app-new-report-button 
+    (report)="handleNewReportButton($event)"
+    >
+</app-new-report-button>
