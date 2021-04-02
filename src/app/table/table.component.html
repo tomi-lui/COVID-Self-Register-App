@@ -1,17 +1,42 @@
-<p>table works!</p>
 
-<table class="table">
-    <tr>
-        <th>Location</th>
-        <th>Person Reported</th>
-        <th>Date of visit</th>
-    </tr>
 
-    <tr *ngFor="let person of peopleInput">
-        <td>{{ person.place }}</td>
-        <td>{{ person.name }}</td>
-        <td>{{ person.date }}</td>
-        <td><button (click)="handleRemoveButton(person.id)">REMOVE</button></td>
-        <td><button (click)="handleInfoButton(person.id)">MORE INFO</button></td> 
-    </tr>
-</table>
+<div ngClass="" >
+ 
+    <table class="table">
+        <tr ngClass="thead-dark">
+            <th>Location</th>
+            <th>Person Reported</th>
+            <th>Date of visit</th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        <tr 
+            *ngFor="let person of peopleInput">
+            <td>{{ person.place }}</td>
+            <td><b>{{ person.name }}</b></td>
+            <td>{{ person.date }}</td>
+            <td>
+                <button 
+                    ngClass="btn btn-dark" 
+                    (click)="handleRemoveButton(person.id)">
+                    REMOVE
+                </button>
+            </td>
+            <td>
+                <!-- create a pop up to display more info -->
+                <ng-template #popContent>
+                    name:   <b>{{person.name}}</b><br>
+                    phone:  <b>{{person.phone}}<br></b>
+                    place:  <b>{{person.place}}<br></b>
+                    date:   <b>{{person.date}}<br></b>
+                    notes:  <b>{{person.notes}}<br></b>
+                </ng-template>
+                <button type="button" class="btn btn-info" [ngbPopover]="popContent" popoverTitle="More Information">
+                    MORE INFO
+                </button>
+            </td>
+        </tr>
+
+    </table>
+</div>
