@@ -1,0 +1,33 @@
+<h1>Form</h1>
+<div class="container">
+    <form #simpleForm="ngForm" (ngSubmit)="getValues(simpleForm.value)">
+
+        <!-- name input -->
+        <input type="text" ngModel name="user" placeholder="Name">
+
+        <br>
+
+        <!-- date picker -->
+        <ngb-datepicker ngModel name="date" #d></ngb-datepicker>
+
+        <br>
+        
+        <!-- Drop down menu -->
+        <label>Choose a location</label>
+        <select name="location" id="location">
+            <option value="metrotown">Metrotown</option>
+            <option value="surrey campus">Surrey Campus</option>
+        </select>
+
+        <br>
+
+        <button>Add a New Location</button>
+
+        <!-- Leaflet map -->
+        <div id="formmapid" style="width:90%;height:400px"></div>
+
+
+
+        <button>Submit</button>
+    </form>
+</div>

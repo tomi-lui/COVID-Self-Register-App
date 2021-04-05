@@ -14,10 +14,10 @@
         <tr 
             *ngFor="let person of peopleInput">
             <td>{{ person.place }}</td>
-            <td><b>{{ person.name }}</b></td>
-            <td>{{ person.date }}</td>
+            <td><b>{{ person.name | titlecase }}</b></td>
+            <td>{{ person.date | date }}</td>
             <td>
-                <button 
+                <button
                     ngClass="btn btn-dark" 
                     (click)="handleRemoveButton(person.id)">
                     REMOVE
@@ -26,11 +26,11 @@
             <td>
                 <!-- create a pop up to display more info -->
                 <ng-template #popContent>
-                    name:   <b>{{person.name}}</b><br>
-                    phone:  <b>{{person.phone}}<br></b>
-                    place:  <b>{{person.place}}<br></b>
-                    date:   <b>{{person.date}}<br></b>
-                    notes:  <b>{{person.notes}}<br></b>
+                    name:   <b>{{ person.name | titlecase }}</b><br>
+                    phone:  <b>{{ person.phone }}<br></b>
+                    place:  <b>{{ person.place }}<br></b>
+                    date:   <b>{{ person.date  }}<br></b>
+                    notes:  <b>{{ person.notes }}<br></b>
                 </ng-template>
                 <button type="button" class="btn btn-info" [ngbPopover]="popContent" popoverTitle="More Information">
                     MORE INFO

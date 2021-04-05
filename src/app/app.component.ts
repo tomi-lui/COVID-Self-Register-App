@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+/// <referenece <reference types="@types/googlemaps" />
+import { Component,ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -6,7 +8,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
   title = 'COVID-self-register-app';
+
+  constructor(private router:Router){}
 
   people = [
 
@@ -16,15 +21,15 @@ export class AppComponent {
       phone:7787133311,
       place:'metrotown',
       date: (new Date()).getTime(),
-      notes:'nothing yet'
+      notes:'I dont know what to write here '
     },
     {
       id:132435123512,
-      name:'vivian',
+      name:'Jack',
       phone:7787133311,
       place:'richmond',
       date: (new Date()).getTime(),
-      notes:'nothing yet'
+      notes:'Bhahahah this is working'
     },
     {
       id:132513251325,
@@ -36,8 +41,9 @@ export class AppComponent {
     },
   ]
 
-  handleNewReportButton(id){
-    console.log('received report button at app component.',id);
+  handleNewReportButton(event){
+    console.log('received report button at app component.',event);
+    this.router.navigate(['Form'])
   }
 
   handleInfoButton(id){
