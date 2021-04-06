@@ -34,7 +34,7 @@
         <div [hidden]="addNewLocation? true : false ">
             <label>Choose a location</label>
                 <select name="place" #place>
-                <option *ngFor="let place of places" [ngValue]="place.place">{{ place.place }}</option> 
+                <option *ngFor="let place of placesInput" [ngValue]="place.place">{{ place.place }}</option> 
             </select>
         </div>
         

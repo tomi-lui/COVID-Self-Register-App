@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Output,EventEmitter, Input } from '@angular/core';
 import * as L from 'leaflet'
 
 
@@ -28,23 +28,15 @@ Marker.prototype.options.icon = iconDefault;
 })
 export class FormPageComponent implements OnInit,AfterViewInit {
 
-  private map;
+  @Output() newPerson = new EventEmitter()
+  @Input() placesInput
 
-  public newLocation = {lat:'Please move the marker',lng:'Please move the marker'};
-
+  private map; //leaflet map
+  public newLocation = {lat:'Please move the marker',lng:'Please move the marker'}; //store new location
   public addNewLocation = true;
 
-  public places = [
-    {
-      place:'Metrotown',position:{lat: 49.2276, lng: -123.0076}
-    },
-    {
-      place:'Surrey',position:{lat: 49.1867, lng: -122.8490}
-    }
-  ]
 
-
-  //handle select date
+  //handle select date, create model for select date input
   public model:any = {};
   public selectedDate:Date;
   public dateWording:string = "yyyy-mm-dd";
@@ -54,6 +46,7 @@ export class FormPageComponent implements OnInit,AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void { 
+    //Make Leaflet Map work
     this.map = L.map('formmapid').setView([49.2, -123], 11);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9taTEyMjEiLCJhIjoiY2tuM3JhazZ1MWs3ZTJxbzh2dTRoN2ZrZiJ9.OSRzhXZkyduJYpHdgqXd9Q', {
@@ -73,12 +66,12 @@ export class FormPageComponent implements OnInit,AfterViewInit {
       
     })
     .addTo(this.map)
-    .bindPopup("<b>Drag Me to</b><br /><b>your Location!</b>").openPopup()
+    .bindPopup("<b>Drag Me to</b><br /><b>to the place</b><br><b>you visited!</b>").openPopup()
 
     //initiate lat lng for new location
     this.newLocation = {lat:marker.getLatLng().lat,lng:marker.getLatLng().lng}
 
-    this.refreshTiles() 
+    // this.refreshTiles() 
 
   }
   ngOnInit(): void {
@@ -102,13 +95,14 @@ export class FormPageComponent implements OnInit,AfterViewInit {
       return alert('Please pick a date from the drop down calendar.')
     }
 
-    if (this.addNewLocation) { //check if user wants to add a new location, or select from existing location
+    if (this.addNewLocation) { 
+    //check if user wants to add a new location, or select from existing location
 
       if (val.newPlace == "") { //Error handling
         return alert("Please enter a new place name.")
 
-      } else { //If no errors, continue to update new person (with new location) to database
-
+      } else { 
+        //If no errors, continue to update new person (with new location) to database
         this.addNewPerson({
           name:val.name,
           phone:val.phone,
@@ -119,7 +113,7 @@ export class FormPageComponent implements OnInit,AfterViewInit {
       }
     } else {  
       //Get the cordinate location for the selected cordinate name
-      const location = (this.places.filter( (value) => {
+      const location = (this.placesInput.filter( (value) => {
            return value.place == val.place
         })
       )
@@ -136,11 +130,12 @@ export class FormPageComponent implements OnInit,AfterViewInit {
   }
 
   addNewPerson(person){
-    console.log("Values from addNewPerson.",person);
-    
+    //pass object to APP component
+    this.newPerson.emit(person)
   }
 
   handleAddNewLocationButton(){
+    //capture wether or not user wants to add new person
     if (this.addNewLocation == true){
       this.addNewLocation = false
     } else {
@@ -151,14 +146,8 @@ export class FormPageComponent implements OnInit,AfterViewInit {
   }
 
   onSelect(evt){
+    //get the date input from the form
     this.selectedDate = new Date(evt.year,evt.month-1,evt.day);
     console.log(this.selectedDate.getTime());
   }
-
-  refreshTiles(){
-    setInterval(() => {
-      L.invaliddateSize(true)
-    })
-  }
-  
 }

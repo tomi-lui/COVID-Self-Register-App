@@ -1,8 +1,13 @@
 
 <!-- <app-map></app-map> -->
-<app-leaflet-map></app-leaflet-map>
+<app-leaflet-map
+    
+></app-leaflet-map>
 
-<app-form-page></app-form-page>
+<app-form-page
+    [placesInput]="places"
+    (newPerson)="handleAddNewPerson($event)"
+></app-form-page>
 
 <app-table
     [peopleInput]="people"
