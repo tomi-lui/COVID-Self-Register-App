@@ -5,6 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
+
 export class TableComponent implements OnInit {
   @Input() peopleInput
   @Output() infoId = new EventEmitter()

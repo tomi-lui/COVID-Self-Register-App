@@ -1,33 +1,73 @@
 <h1>Form</h1>
 <div class="container">
-    <form #simpleForm="ngForm" (ngSubmit)="getValues(simpleForm.value)">
+
+    <form #simpleForm="ngForm" >
 
         <!-- name input -->
-        <input type="text" ngModel name="user" placeholder="Name">
+        <input #name type="text" name="user" value="" placeholder="Name">
+
+        <br>
+
+        <!-- phone input -->
+        <input #phone type="text" name="phone" value="" placeholder="Phone Number">
 
         <br>
 
         <!-- date picker -->
-        <ngb-datepicker ngModel name="date" #d></ngb-datepicker>
+        <!-- <ngb-datepicker #date name="date" value=""></ngb-datepicker> -->
+
+        <br>
+
+        <!-- drop down calendar -->
+        <div class="input-group ">
+            <input id="datepicker" class="form-control col-7" placeholder="{{dateWording}}" ngbDatepicker #date="ngbDatepicker" required pattern="[0-9]{4}[-][0-9]{2}[-][0-9]{2}" [(ngModel)]="currentDateObj" name="date" (dateSelect) = "onSelect($event)">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary picto-calender" (click)="date.toggle()" type="button"></button>
+            </div>
+        </div> 
+
+        
 
         <br>
         
-        <!-- Drop down menu -->
-        <label>Choose a location</label>
-        <select name="location" id="location">
-            <option value="metrotown">Metrotown</option>
-            <option value="surrey campus">Surrey Campus</option>
-        </select>
+        <!-- Drop down menu for existing location-->
+        <div [hidden]="addNewLocation? true : false ">
+            <label>Choose a location</label>
+                <select name="place" #place>
+                <option *ngFor="let place of places" [ngValue]="place.place">{{ place.place }}</option> 
+            </select>
+        </div>
+        
 
+
+       <!-- Toggle: add new location/ select existing location-->
+        <button 
+            (click)="handleAddNewLocationButton()" 
+            [innerText]="addNewLocation? 'Select From Existing Location' : 'Add New Location'"
+        >
+        </button>
+
+        <!-- new location form -->
+        <div class="container" [hidden]="addNewLocation? false : true">
+
+            <!-- new location name -->
+            <label>Place Name</label>
+            <input #newPlace type="text" value="">
+
+            <!-- display cordinates -->
+            <p>Latitude: {{ newLocation.lat }}, Longitude: {{newLocation.lng}}</p>
+
+            <!-- Leaflet map -->
+            <div id="formmapid" style="width:90%;height:400px"></div>
+
+        </div>
+        
         <br>
 
-        <button>Add a New Location</button>
-
-        <!-- Leaflet map -->
-        <div id="formmapid" style="width:90%;height:400px"></div>
-
-
-
-        <button>Submit</button>
+        <!-- get the values from the form as an object-->
+        <button
+            (click)="getValues({name:name.value,phone:phone.value,place:place.value,newPlace:newPlace.value})">
+            Submit
+        </button>
     </form>
 </div>
