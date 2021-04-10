@@ -5,56 +5,68 @@ import { HttpClient } from '@angular/common/http'
 })
 export class PeopleService implements OnInit {
   URL = "https://218.selfip.net/apps/AInYTcCKgz/collections/people/documents/"
-  people = [
+  people = []
+  places = []
+  // people = [
 
-      {
-        id:123445153124,
-        name:'Tomi',
-        phone:7787133311,
-        place:'Metrotown',
-        date: (new Date()).getTime(),
-        notes:'I dont know what to write here ',
-        position:{lat: 49.2276, lng: -123.0076}
-      },
-      {
-        id:132435123512,
-        name:'Jack',
-        phone:7787133311,
-        place:'Surrey',
-        date: (new Date()).getTime(),
-        notes:'Bhahahah this is working',
-        position:{lat: 49.1867, lng: -122.8490}
-      },
-      {
-        id:132513251325,
-        name:'Bill',
-        phone:7787133311,
-        place:'Metrotown',
-        date: (new Date()).getTime(),
-        notes:'nothing yet',
-        position:{lat: 49.2276, lng: -123.0076}
-      },
-  ]
-
-  places = this.extractPlacesFromPeople(this.people)
+  //     {
+  //       id:123445153124,
+  //       name:'Tomi',
+  //       phone:7787133311,
+  //       place:'Metrotown',
+  //       date: (new Date()).getTime(),
+  //       notes:'I dont know what to write here ',
+  //       position:{lat: 49.2276, lng: -123.0076}
+  //     },
+  //     {
+  //       id:132435123512,
+  //       name:'Jack',
+  //       phone:7787133311,
+  //       place:'Surrey',
+  //       date: (new Date()).getTime(),
+  //       notes:'Bhahahah this is working',
+  //       position:{lat: 49.1867, lng: -122.8490}
+  //     },
+  //     {
+  //       id:132513251325,
+  //       name:'Bill',
+  //       phone:7787133311,
+  //       place:'Metrotown',
+  //       date: (new Date()).getTime(),
+  //       notes:'nothing yet',
+  //       position:{lat: 49.2276, lng: -123.0076}
+  //     },
+  // ]
 
   constructor(private http: HttpClient) { 
-    this.httpGetAll()
+    this.people = this.httpGetAll()
+    this.places = this.extractPlacesFromPeople(this.people)
   }
+
 
   ngOnInit(){
     console.log("oninit called");
-    // this.httpGetAll() 
+    this.httpGetAll() 
   }
 
 
-  httpGetAll(){
-    this.http.get<Object>(this.URL).subscribe(
+  httpGetAll() : Array<any> {
+    var result
+    this.http.get<any>(this.URL).subscribe(
       (data) => {
-        console.log(data);
+        console.log("objects with keys",data);
         
+        //return the data only
+        var objectsWithoutKeys = data.map( obj => {
+          return obj.data
+        })
+
+        console.log(objectsWithoutKeys);
+        this.people = objectsWithoutKeys
+        result = objectsWithoutKeys
       }
     )
+    return result
   }
 
 
