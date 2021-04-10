@@ -1,9 +1,10 @@
 import { Injectable, OnInit } from '@angular/core';
-
+import { HttpClient } from '@angular/common/http'
 @Injectable({
   providedIn: 'root'
 })
 export class PeopleService implements OnInit {
+  URL = "https://218.selfip.net/apps/AInYTcCKgz/collections/people/documents/"
   people = [
 
       {
@@ -37,10 +38,65 @@ export class PeopleService implements OnInit {
 
   places = this.extractPlacesFromPeople(this.people)
 
-  constructor() { }
+  constructor(private http: HttpClient) { 
+    this.httpGetAll()
+  }
 
   ngOnInit(){
-    // this.places = this.extractPlacesFromPeople(this.people)
+    console.log("oninit called");
+    // this.httpGetAll() 
+  }
+
+
+  httpGetAll(){
+    this.http.get<Object>(this.URL).subscribe(
+      (data) => {
+        console.log(data);
+        
+      }
+    )
+  }
+
+
+  httpPost(newPerson){
+    this.http.post<Object>(this.URL, {
+      "key": (new Date()).getTime(),
+      "data": newPerson
+    }).subscribe(
+      (data) => {
+        console.log(data);
+      }
+    )
+  }
+
+
+  httpDelete(key:string){
+    this.http.delete(this.URL + key,
+    {observe:'response'}
+    ).subscribe(
+      data => {        
+      }
+    )
+    console.log(`Key of ${key} deleted.`);
+  }
+
+
+  getPeople(){
+    return this.people
+  }
+  
+
+  getPlaces(){
+    return this.places
+  }
+
+  add(newPerson){
+    this.people.push(newPerson)
+    return newPerson
+  }
+
+  delete(){
+
   }
 
   extractPlacesFromPeople(peopleList){
@@ -72,27 +128,6 @@ export class PeopleService implements OnInit {
       }
     })
 
-    console.log(counts);
-    console.log(placeArray);
-    
     return placeArray
-  }
-
-  getPeople(){
-    return this.people
-  }
-
-  getPlaces(){
-    console.log(this.places);
-    return this.places
-  }
-
-  add(newPerson){
-    this.people.push(newPerson)
-    return newPerson
-  }
-
-  delete(){
-
   }
 }

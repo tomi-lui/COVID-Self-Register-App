@@ -9,7 +9,9 @@ import { NewReportButtonComponent } from './new-report-button/new-report-button.
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { FormPageComponent } from './form-page/form-page.component';
-import { FormsModule } from '@angular/forms'
+import { HttpClientModule } from '@angular/common/http'
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -20,11 +22,13 @@ import { FormsModule } from '@angular/forms'
     LeafletMapComponent,
     FormPageComponent,
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
