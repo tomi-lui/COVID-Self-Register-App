@@ -1,22 +1,25 @@
 
 <!-- <app-map></app-map> -->
 <app-leaflet-map
-    
+    *ngIf="!displayForm"
+    [placesInput]="places"
 ></app-leaflet-map>
 
 <app-form-page
+    *ngIf="displayForm"
     [placesInput]="places"
     (newPerson)="handleAddNewPerson($event)"
+    (displayHomePage)="displayHomePage()"
 ></app-form-page>
 
 <app-table
+    *ngIf="!displayForm"
     [peopleInput]="people"
     (removeId)="handleRemoveButton($event)"
     (infoId)="handleInfoButton($event)"
-    >
-</app-table>
+></app-table>
 
-<app-new-report-button 
+<app-new-report-button
+    *ngIf="!displayForm"
     (report)="handleNewReportButton($event)"
-    >
-</app-new-report-button>
+></app-new-report-button>

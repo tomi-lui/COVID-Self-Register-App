@@ -29,6 +29,7 @@ Marker.prototype.options.icon = iconDefault;
 export class FormPageComponent implements OnInit,AfterViewInit {
 
   @Output() newPerson = new EventEmitter()
+  @Output() displayHomePage = new EventEmitter()
   @Input() placesInput
 
   private map; //leaflet map
@@ -47,7 +48,7 @@ export class FormPageComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit(): void { 
     //Make Leaflet Map work
-    this.map = L.map('formmapid').setView([49.2, -123], 11);
+    this.map = L.map('formmapid').setView([49.22593533950, -123.00730229277266], 10);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9taTEyMjEiLCJhIjoiY2tuM3JhazZ1MWs3ZTJxbzh2dTRoN2ZrZiJ9.OSRzhXZkyduJYpHdgqXd9Q', {
       maxZoom: 18,
@@ -70,8 +71,6 @@ export class FormPageComponent implements OnInit,AfterViewInit {
 
     //initiate lat lng for new location
     this.newLocation = {lat:marker.getLatLng().lat,lng:marker.getLatLng().lng}
-
-    // this.refreshTiles() 
 
   }
   ngOnInit(): void {
@@ -110,6 +109,9 @@ export class FormPageComponent implements OnInit,AfterViewInit {
           place:val.newPlace,
           position: this.newLocation
         })
+
+        //return to homepage after submission
+        this.handleDisplayHomePage()
       }
     } else {  
       //Get the cordinate location for the selected cordinate name
@@ -126,6 +128,9 @@ export class FormPageComponent implements OnInit,AfterViewInit {
         place:val.place,
         position: location[0].position
       })
+
+      //Return to homepage after submition
+      this.handleDisplayHomePage()
     }
   }
 
@@ -149,5 +154,9 @@ export class FormPageComponent implements OnInit,AfterViewInit {
     //get the date input from the form
     this.selectedDate = new Date(evt.year,evt.month-1,evt.day);
     console.log(this.selectedDate.getTime());
+  }
+
+  handleDisplayHomePage(){
+    this.displayHomePage.emit()
   }
 }
