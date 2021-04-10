@@ -11,6 +11,7 @@ import { LeafletMapComponent } from './leaflet-map/leaflet-map.component';
 import { FormPageComponent } from './form-page/form-page.component';
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
+import { PeopleService } from './people.service';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [PeopleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation, Input } from '@angular/core';
 import * as L from 'leaflet'
+import { PeopleService } from '../people.service';
 
 // need to add to make leaflet icons work
 import { icon, Marker } from 'leaflet';
@@ -35,7 +36,7 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
   private map; //leaflet map
   public locations; //this list will store leaflet marker objects
 
-  constructor() { }
+  constructor(private ps: PeopleService) { }
 
 
   ngAfterViewInit(): void { 
@@ -83,6 +84,7 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.placesInput = this.ps.getPlaces()
   }
 
 }

@@ -1,12 +1,17 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
+
 @Injectable({
   providedIn: 'root'
 })
 export class PeopleService implements OnInit {
+
+
   URL = "https://218.selfip.net/apps/AInYTcCKgz/collections/people/documents/"
-  people = []
-  places = []
+
+
+  // people = this.httpGetAll()
+  // places = this.extractPlacesFromPeople(this.people)
   // people = [
 
   //     {
@@ -38,35 +43,26 @@ export class PeopleService implements OnInit {
   //     },
   // ]
 
-  constructor(private http: HttpClient) { 
-    this.people = this.httpGetAll()
-    this.places = this.extractPlacesFromPeople(this.people)
-  }
+  constructor(private http: HttpClient) {}
 
 
-  ngOnInit(){
-    console.log("oninit called");
-    this.httpGetAll() 
-  }
+  ngOnInit(){}
 
 
-  httpGetAll() : Array<any> {
-    var result
-    this.http.get<any>(this.URL).subscribe(
+  httpGetAll(): Array<any>{
+    // Gets all the data from the database
+
+    var allData = []
+    var filteredData = []
+    this.http.get<Object>(this.URL).subscribe(
       (data) => {
-        console.log("objects with keys",data);
-        
-        //return the data only
-        var objectsWithoutKeys = data.map( obj => {
-          return obj.data
-        })
-
-        console.log(objectsWithoutKeys);
-        this.people = objectsWithoutKeys
-        result = objectsWithoutKeys
+        Object.keys(data).forEach(key => {
+          allData.push(data[key])
+          filteredData.push(data[key]["data"])
+        });
       }
     )
-    return result
+    return [allData, filteredData]
   }
 
 
@@ -93,18 +89,25 @@ export class PeopleService implements OnInit {
   }
 
 
-  getPeople(){
-    return this.people
+  getPeople(): Array<any>{
+    var data = this.httpGetAll()
+    var people = data[1]
+    console.log(people);
+    
+    return people
   }
   
 
   getPlaces(){
-    return this.places
+    var filteredData = this.httpGetAll()[1]
+    var places = this.extractPlacesFromPeople(filteredData)
+    console.log("getPlaces",places);
+    return places
   }
 
   add(newPerson){
-    this.people.push(newPerson)
-    return newPerson
+    // this.people.push(newPerson)
+    // return newPerson
   }
 
   delete(){
@@ -112,34 +115,57 @@ export class PeopleService implements OnInit {
   }
 
   extractPlacesFromPeople(peopleList){
+
+    console.log("extractPlacesFromPeople", peopleList);
+
+
     //This function returns a list of object with place, position, and covid case count
     //to pass down to the leaflet-map component to display markers.
 
     var counts = {}
 
     //count the instances of places and store it.
-    peopleList.forEach((element) => {
-      counts[element.place] = counts[element.place] ? counts[element.place] + 1 : 1;
-    });
-
-    //reduce array of objects so that there is only a single instace of place and add the counts attribute to it.
-    var placeArray = peopleList.map((person) => {
-      const placeInformation = {}
-      placeInformation["place"] = person.place
-      placeInformation["position"] = person.position
-      placeInformation["count"] = counts[person.place]
-      return placeInformation
+    Object.keys(peopleList).forEach(key =>{
+      console.log("key is: ",key);
     })
+
+    peopleList.forEach(element => {
+      console.log("element is:",element);
+      
+    });
+    // Object.keys(peopleList).forEach((key) => {
+    //   console.log("inside the counting loop",peopleList[key]["place"]);
+      
+    //   counts[peopleList[key]["place"]] = counts[peopleList[key]["place"]] ? counts[peopleList[key]["place"]] + 1 : 1;
+    // });
+
+
+    console.log("counts", counts);
+    
+
+
+    var place: Array<any>;
+    //reduce array of objects so that there is only a single instace of place and add the counts attribute to it.
+    Object.keys(peopleList).forEach((key) => {
+      const placeInformation = {}
+      placeInformation["place"] = peopleList[key]["place"]
+      placeInformation["position"] = peopleList[key]["position"]
+      placeInformation["count"] = peopleList[key]["count"]
+      place.push(placeInformation)
+    })
+
+    console.log("place:",place);
+    
 
     // remove duplicates
     var tempPlacesCount = {}
-    placeArray = placeArray.filter( placeInfo => {
+    place = place.filter( placeInfo => {
       tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
       if (tempPlacesCount[placeInfo.place] == 1) {
         return placeInfo
       }
     })
 
-    return placeArray
+    return place
   }
 }

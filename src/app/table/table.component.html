@@ -12,7 +12,8 @@
         </tr>
 
         <tr 
-            *ngFor="let person of peopleInput">
+            *ngFor="let person of peopleInput"
+        >
             <td>{{ person.place }}</td>
             <td><b>{{ person.name | titlecase }}</b></td>
             <td>{{ person.date | date }}</td>

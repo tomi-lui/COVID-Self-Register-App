@@ -18,8 +18,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.people = this.ps.getPeople()
-    this.places = this.ps.getPlaces()
   }
 
   extractPlacesFromPeople(peopleList){
