@@ -17,7 +17,7 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     this.peopleInput = this.ps.getPeople()
-    console.log(this.peopleInput);
+    console.log("received people from getPeople() at table.components",this.peopleInput);
     
   }
 

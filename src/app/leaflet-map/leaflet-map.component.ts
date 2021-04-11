@@ -31,8 +31,8 @@ Marker.prototype.options.icon = iconDefault;
 
 export class LeafletMapComponent implements OnInit, AfterViewInit {
 
-  @Input() placesInput //contains the cordinates, place name, cases reported
-
+  // @Input() placesInput //contains the cordinates, place name, cases reported
+  public placesInput
   private map; //leaflet map
   public locations; //this list will store leaflet marker objects
 
@@ -54,6 +54,7 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
 
 
     this.convertToMarkerObject()
+    this.convertToMarkerObjectNew()
 
     //dynamically update markers from the locations list
     this.locations.map( location => {
@@ -76,15 +77,47 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
     //creates marker objects which contains dynamic strings informing the number of cases reported
     this.locations = this.placesInput.map( placesInfo => {
       //create temporary object
+      
       var markerFriendlyObject = {}
-      markerFriendlyObject["location"] = [placesInfo["position"].lat, placesInfo["position"].lng]
-      markerFriendlyObject["description"] = `<b>${placesInfo.place}</b><br />${placesInfo.count} cases reported.`
+      markerFriendlyObject["location"] = [placesInfo["position"]["lat"], placesInfo["position"]["lng"]]
+      markerFriendlyObject["description"] = `<b>${placesInfo["place"]}</b><br />${placesInfo["count"]} cases reported.`
+      return markerFriendlyObject
+    })
+  }
+
+    convertToMarkerObjectNew(){
+    console.log("converToMarkerObjectNew Called");
+    console.log(typeof this.placesInput);
+    console.log(this.placesInput);
+    
+    
+    
+    //creates marker objects which contains dynamic strings informing the number of cases reported
+    Object.keys(this.placesInput).forEach( key => {
+      console.log(key);
+      
+    })
+
+
+    for (var key in this.placesInput){
+      console.log(key);
+      
+    }
+
+    this.locations = this.placesInput.map( placesInfo => {
+      //create temporary object
+      
+      var markerFriendlyObject = {}
+      markerFriendlyObject["location"] = [placesInfo["position"]["lat"], placesInfo["position"]["lng"]]
+      markerFriendlyObject["description"] = `<b>${placesInfo["place"]}</b><br />${placesInfo["count"]} cases reported.`
       return markerFriendlyObject
     })
   }
 
   ngOnInit(): void {
     this.placesInput = this.ps.getPlaces()
+    console.log("placesInput",this.placesInput);
+    
   }
 
 }
