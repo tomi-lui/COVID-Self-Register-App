@@ -8,7 +8,8 @@ export class PeopleService implements OnInit {
 
 
   URL = "https://218.selfip.net/apps/AInYTcCKgz/collections/people/documents/"
-
+  allData
+  people
 
   // people = this.httpGetAll()
   // places = this.extractPlacesFromPeople(this.people)
@@ -58,105 +59,152 @@ export class PeopleService implements OnInit {
 
 
   ngOnInit(){
+    this.httpGetAll() //will populate the allData variable
+    this.removeKeysFromAllData(this.allData) //will populate the people variable
   }
 
 
-  httpGetAll(): Array<any>{
-    // Gets all the data from the database
+  // httpGetAll(): Array<any>{
+  //   // Gets all the data from the database
 
-    var allData = []
-    var filteredData = []
-    var counts = {}
-    var place = []
-    var places
+  //   var allData = []
+  //   var filteredData = []
+  //   var counts = {}
+  //   var place = []
+  //   var places
 
+
+  //   this.http.get<any>(this.URL).subscribe(
+
+  //     (data) => {
+
+  //       // console.log("very first data:",data);
+        
+  //       Object.keys(data).forEach( key => {
+  //         // Count the number cases per location, store it in counts
+
+  //         var element = data[key]["data"]
+  //         counts[element["place"]] = counts[element["place"]] ? counts[element["place"]] + 1 : 1
+  //       })
+        
+        
+  //       Object.keys(data).forEach(key => {
+  //         allData.push(data[key])
+  //         filteredData.push(data[key]["data"])
+
+  //       });
+
+
+  //       Object.keys(data).forEach( key => {
+  //         // push an object containing only place, position and counts
+
+  //         var person = data[key]["data"]
+  //         // console.log("person",person);
+          
+  //         const placeInformation = {}
+  //         placeInformation["place"] = person.place
+  //         placeInformation["position"] = person.position
+  //         placeInformation["count"] = counts[person.place]
+            
+  //         place.push(placeInformation)
+
+  //       })
+
+        
+  //       place = place.filter( placeInfo => {
+  //         // console.log("placeInfo",placeInfo);
+          
+  //         var tempPlacesCount = {}
+  //         tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
+  //         if (tempPlacesCount[placeInfo.place] == 1) {
+  //           return placeInfo
+  //         }
+  //       })
+
+  //       places = place
+  //       // console.log("counts",counts);
+  //       // console.log("place",place);
+  //     }
+  //   )
+
+  //   console.log("allData",allData);
+  //   // console.log("filteredData", filteredData);
+  //   // console.log("place",place);
+  //   // console.log("places",places);
+    
+    
+  //   return [allData, filteredData, place]
+  // }
+
+  httpGetAll():void{
+    // Gets all the data from the server
 
     this.http.get<any>(this.URL).subscribe(
 
       (data) => {
-
-        // console.log("very first data:",data);
-        
-        Object.keys(data).forEach( key => {
-          // Count the number cases per location, store it in counts
-
-          var element = data[key]["data"]
-          counts[element["place"]] = counts[element["place"]] ? counts[element["place"]] + 1 : 1
-        })
-        
-        
-        Object.keys(data).forEach(key => {
-          allData.push(data[key])
-          filteredData.push(data[key]["data"])
-
-        });
-
-
-        Object.keys(data).forEach( key => {
-          // push an object containing only place, position and counts
-
-          var person = data[key]["data"]
-          // console.log("person",person);
-          
-          const placeInformation = {}
-          placeInformation["place"] = person.place
-          placeInformation["position"] = person.position
-          placeInformation["count"] = counts[person.place]
-            
-          place.push(placeInformation)
-
-        })
-
-        
-        place = place.filter( placeInfo => {
-          // console.log("placeInfo",placeInfo);
-          
-          var tempPlacesCount = {}
-          tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
-          if (tempPlacesCount[placeInfo.place] == 1) {
-            return placeInfo
-          }
-        })
-
-        places = place
-        // console.log("counts",counts);
-        // console.log("place",place);
+        this.allData = data
       }
     )
-
-    // console.log("allData",allData);
-    // console.log("filteredData", filteredData);
-    // console.log("place",place);
-    // console.log("places",places);
+    console.log(this.allData);
     
-    
-    return [allData, filteredData, place]
   }
 
-
-
+  removeKeysFromAllData(allData): void {
+    // returns an array containing data only (without the keys)
+    var people = []
+    allData.forEach(element => {
+      var temp = {}
+      temp = element.data
+      people.push(temp)
+    });
+    this.people = people
+  }
 
   extractPlacesFromPeople(peopleList){
-
+    // returns an array of objects containing information of each place  
     var counts = {}
+    var place = []
 
     //count the instances of places and store it.
     
-    Object.keys(peopleList).forEach((key) => {
-      console.log("inside the counting loop",peopleList[key]["place"]);
+    // Object.keys(peopleList).forEach((key) => {
+    //   console.log("inside the counting loop",peopleList[key]["place"]);
       
-      counts[peopleList[key]["place"]] = counts[peopleList[key]["place"]] ? counts[peopleList[key]["place"]] + 1 : 1;
+    //   counts[peopleList[key]["place"]] = counts[peopleList[key]["place"]] ? counts[peopleList[key]["place"]] + 1 : 1;
+    // });
+
+    peopleList.forEach(element => {
+      counts[element.place] = counts[element.place] ? counts[element.place] + 1 : 1;
     });
 
-    var place: Array<any>;
-    //reduce array of objects so that there is only a single instace of place and add the counts attribute to it.
-    Object.keys(peopleList).forEach((key) => {
+    // var place: Array<any>;
+    // //reduce array of objects so that there is only a single instace of place and add the counts attribute to it.
+    // Object.keys(peopleList).forEach((key) => {
+    //   const placeInformation = {}
+    //   placeInformation["place"] = peopleList[key]["place"]
+    //   placeInformation["position"] = peopleList[key]["position"]
+    //   placeInformation["count"] = peopleList[key]["count"]
+    //   place.push(placeInformation)
+    // })
+
+    peopleList.forEach(element => {
       const placeInformation = {}
-      placeInformation["place"] = peopleList[key]["place"]
-      placeInformation["position"] = peopleList[key]["position"]
-      placeInformation["count"] = peopleList[key]["count"]
+      placeInformation["place"] = peopleList.place
+      placeInformation["position"] = peopleList.position
+      placeInformation["count"] = counts[element.place]
       place.push(placeInformation)
-    })
+    });
+
+
+    // // remove duplicates
+    // var tempPlacesCount = {}
+    // place = place.filter( placeInfo => {
+    //   tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
+    //   if (tempPlacesCount[placeInfo.place] == 1) {
+    //     return placeInfo
+    //   }
+    // })
+
 
     // remove duplicates
     var tempPlacesCount = {}
@@ -198,17 +246,14 @@ export class PeopleService implements OnInit {
 
 
   getPeople(): Array<any>{
-    var data = this.httpGetAll()
-    var people = data[1]
-    
-    return people
+    return this.people
   }
   
 
   getPlaces(){
-    var places = this.httpGetAll()[2]
-    return places
+    return this.extractPlacesFromPeople(this.people)
   }
+
 
   add(newPerson){
     // this.people.push(newPerson)
