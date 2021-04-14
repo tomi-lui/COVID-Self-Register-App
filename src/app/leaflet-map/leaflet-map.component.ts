@@ -1,6 +1,8 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, Input,NgZone } from '@angular/core';
 import * as L from 'leaflet'
 import { PeopleService } from '../people.service';
+import { Observable } from 'rxjs'
+
 
 // need to add to make leaflet icons work
 import { icon, Marker } from 'leaflet';
@@ -31,15 +33,21 @@ Marker.prototype.options.icon = iconDefault;
 
 export class LeafletMapComponent implements OnInit, AfterViewInit {
 
-  // @Input() placesInput //contains the cordinates, place name, cases reported
-  public placesInput
+  // @Input() places //contains the cordinates, place name, cases reported
+  places
   private map; //leaflet map
-  public locations; //this list will store leaflet marker objects
+  markerObjects; //this list will store leaflet marker objects
 
-  constructor(private ps: PeopleService) { }
+  constructor(private ps: PeopleService, private NgZone: NgZone) { }
+
 
 
   ngAfterViewInit(): void { 
+
+    console.log(this.markerObjects);
+    console.log(this.places);
+    
+     
     this.map = L.map('mapid').setView([49.2, -123], 11);
 
     //create a leaflet map
@@ -53,13 +61,18 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
     }).addTo(this.map);
 
 
-    this.convertToMarkerObject()
-    this.convertToMarkerObjectNew()
-
-    //dynamically update markers from the locations list
-    this.locations.map( location => {
+    // this.convertToMarkerObject()
+    // console.log(this.places);
+    
+     
+    //dynamically update markers from the markerObjects list
+    this.markerObjects.map( location => {
+      console.log("hihi");
+      
       L.marker(location.location).addTo(this.map)
      .bindPopup(location.description).openPopup()
+
+    })
 
 
     //Examples of hard coded markers:
@@ -69,55 +82,133 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
     // L.marker([49.1867, -122.8490]).addTo(this.map)
     // .bindPopup("<b>SFU Surrey</b><br />cases reported.").openPopup();
 
-  })
   }
 
 
   convertToMarkerObject(){
-    //creates marker objects which contains dynamic strings informing the number of cases reported
-    this.locations = this.placesInput.map( placesInfo => {
-      //create temporary object
+    //generate marker objects which contains dynamic strings informing the number of cases reported
+    this.markerObjects = this.places.map( placesInfo => {
+      // console.log(this.places);
       
+      //create temporary object
       var markerFriendlyObject = {}
+
       markerFriendlyObject["location"] = [placesInfo["position"]["lat"], placesInfo["position"]["lng"]]
       markerFriendlyObject["description"] = `<b>${placesInfo["place"]}</b><br />${placesInfo["count"]} cases reported.`
       return markerFriendlyObject
     })
   }
 
-    convertToMarkerObjectNew(){
-    console.log("converToMarkerObjectNew Called");
-    console.log(typeof this.placesInput);
-    console.log(this.placesInput);
-    
-    
-    
-    //creates marker objects which contains dynamic strings informing the number of cases reported
-    Object.keys(this.placesInput).forEach( key => {
-      console.log(key);
-      
-    })
-
-
-    for (var key in this.placesInput){
-      console.log(key);
-      
-    }
-
-    this.locations = this.placesInput.map( placesInfo => {
-      //create temporary object
-      
-      var markerFriendlyObject = {}
-      markerFriendlyObject["location"] = [placesInfo["position"]["lat"], placesInfo["position"]["lng"]]
-      markerFriendlyObject["description"] = `<b>${placesInfo["place"]}</b><br />${placesInfo["count"]} cases reported.`
-      return markerFriendlyObject
-    })
-  }
 
   ngOnInit(): void {
-    this.placesInput = this.ps.getPlaces()
-    console.log("placesInput",this.placesInput);
-    
-  }
 
+    // this.ps.httpGetDataTest()
+    
+    // this.ps.httpGetData().subscribe( unfilteredData => {
+
+    //   var data: Array<Object> = []
+    //   unfilteredData.forEach(element => {
+    //     var temp = {}
+    //     temp = element.data
+    //     data.push(temp)
+    //   });
+
+    //   // console.log(data); //filtering successful
+      
+    //   // returns an array of objects containing information of each place  
+    //   var counts = {}
+    //   var place = []
+
+    //   data.forEach(element => {
+    //     // console.log(element["place"]);
+    //     counts[element["place"]] = counts[element["place"]] ? counts[element["place"]] + 1 : 1;
+    //   });
+
+    //   // console.log(counts); // working
+
+    //   data.forEach(element => {
+    //     const placeInformation = {}
+    //     placeInformation["place"] = data["place"]
+    //     placeInformation["position"] = data["position"]
+    //     placeInformation["count"] = counts[element["place"]]
+    //     place.push(placeInformation)
+    //   });
+
+    //   // remove duplicates
+    //   var tempPlacesCount = {}
+    //   place = data.filter( placeInfo => {
+        
+    //     tempPlacesCount[placeInfo["place"]] = tempPlacesCount[placeInfo["place"]] ? tempPlacesCount[placeInfo["place"]] + 1 : 1;
+    //     if (tempPlacesCount[placeInfo["place"]] == 1) {
+    //       placeInfo["count"] = counts[placeInfo["place"]]
+    //       return placeInfo
+    //     }
+    //   })
+    //   // console.log(place); //working
+      
+    //   this.places = place
+    //   // console.log(this.places); //working
+
+    //   this.convertToMarkerObject()
+    //   console.log(this.markerObjects); //working
+      
+    // })
+
+    this.NgZone.run( () => {
+        
+    this.ps.httpGetData().subscribe( unfilteredData => {
+
+      var data: Array<Object> = []
+      unfilteredData.forEach(element => {
+        var temp = {}
+        temp = element.data
+        data.push(temp)
+      });
+
+      // console.log(data); //filtering successful
+      
+      // returns an array of objects containing information of each place  
+      var counts = {}
+      var place = []
+
+      data.forEach(element => {
+        // console.log(element["place"]);
+        counts[element["place"]] = counts[element["place"]] ? counts[element["place"]] + 1 : 1;
+      });
+
+      // console.log(counts); // working
+
+      data.forEach(element => {
+        const placeInformation = {}
+        placeInformation["place"] = data["place"]
+        placeInformation["position"] = data["position"]
+        placeInformation["count"] = counts[element["place"]]
+        place.push(placeInformation)
+      });
+
+      // remove duplicates
+      var tempPlacesCount = {}
+      place = data.filter( placeInfo => {
+        
+        tempPlacesCount[placeInfo["place"]] = tempPlacesCount[placeInfo["place"]] ? tempPlacesCount[placeInfo["place"]] + 1 : 1;
+        if (tempPlacesCount[placeInfo["place"]] == 1) {
+          placeInfo["count"] = counts[placeInfo["place"]]
+          return placeInfo
+        }
+      })
+      // console.log(place); //working
+      
+      this.places = place
+      // console.log(this.places); //working
+
+      this.convertToMarkerObject()
+      console.log(this.markerObjects); //working
+      
+    })
+
+
+
+
+    })
+  }
 }

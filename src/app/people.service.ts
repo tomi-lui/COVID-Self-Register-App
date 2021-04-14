@@ -55,12 +55,17 @@ export class PeopleService implements OnInit {
 
   constructor(private http: HttpClient) {
     // this.httpPost(this.people[3])
+    // this.httpGetAll() //will populate the allData variable
+    // this.removeKeysFromAllData(this.allData) //will populate the people variable
+    // console.log(this.allData);
   }
 
 
   ngOnInit(){
-    this.httpGetAll() //will populate the allData variable
-    this.removeKeysFromAllData(this.allData) //will populate the people variable
+    // this.httpGetAll() //will populate the allData variable
+    // this.removeKeysFromAllData(this.allData) //will populate the people variable
+    // console.log(this.allData);
+    
   }
 
 
@@ -143,11 +148,13 @@ export class PeopleService implements OnInit {
 
       (data) => {
         this.allData = data
+        console.log(this.allData);
       }
     )
-    console.log(this.allData);
-    
+    // console.log(this.allData);
   }
+
+  
 
   removeKeysFromAllData(allData): void {
     // returns an array containing data only (without the keys)
@@ -218,7 +225,15 @@ export class PeopleService implements OnInit {
     return place
   }
 
-
+  returnDataOnly(data){
+      //retrieve data, extract the "data" from each object and set it to the people variable
+      var people = []
+      data.forEach(element => {
+        var temp = {}
+        temp = element.data
+        people.push(temp)
+      });
+  }
 
   httpPost(newPerson){
     this.http.post<any>(this.URL, {
@@ -245,10 +260,17 @@ export class PeopleService implements OnInit {
   }
 
 
-  getPeople(): Array<any>{
-    return this.people
+  httpGetData() {
+    return this.http.get<any>(this.URL)
   }
   
+  // httpGetDataTest() {
+  //   return this.http.get<any>(this.URL).pipe(
+  //     map( element => {
+
+  //     })
+  //   )
+  // }
 
   getPlaces(){
     return this.extractPlacesFromPeople(this.people)
