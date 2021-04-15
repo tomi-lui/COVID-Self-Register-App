@@ -30,7 +30,7 @@ Marker.prototype.options.icon = iconDefault;
 })
 
 
-export class LeafletMapComponent implements OnInit, AfterViewInit {
+export class LeafletMapComponent implements AfterViewInit {
 
   @Input() places //contains the cordinates, place name, cases reported
   // places
@@ -48,10 +48,9 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
     const res = await this.ps.httpGetData().toPromise()
     this.convertToPlacesArray(res)
     // console.log(this.allData);
-    console.log(this.places);
     
      
-    this.map = L.map('mapid').setView([49.2, -123], 11);
+    this.map = L.map('mapid').setView([49.2453968, -123.0509688400], 11);
 
     //create a leaflet map
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidG9taTEyMjEiLCJhIjoiY2tuM3JhazZ1MWs3ZTJxbzh2dTRoN2ZrZiJ9.OSRzhXZkyduJYpHdgqXd9Q', {
@@ -68,7 +67,6 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
      
     //dynamically update markers from the markerObjects list
     this.markerObjects.map( location => {
-      console.log("hihi");
       
       L.marker(location.location).addTo(this.map)
      .bindPopup(location.description).openPopup()
@@ -86,10 +84,9 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
   }
 
 
-  convertToMarkerObject(){
+  convertToMarkerObject(): void{
     //generate marker objects which contains dynamic strings informing the number of cases reported
     this.markerObjects = this.places.map( placesInfo => {
-      // console.log(this.places);
       
       //create temporary object
       var markerFriendlyObject = {}
@@ -101,6 +98,8 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
   }
 
   convertToPlacesArray(allData): void{
+    // create an array containing the number of instances of each place reported
+
     var dataOnly = []
     allData.forEach(element => {
         
@@ -135,11 +134,8 @@ export class LeafletMapComponent implements OnInit, AfterViewInit {
         return placeInfo
       }
     })
-    console.log(place);
     
     this.places = place
     }
 
-  async ngOnInit(): Promise<void> {
-  } 
 }

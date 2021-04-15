@@ -5,3 +5,7 @@
 .name {
   font: bold;
 }
+
+.sortable {
+  cursor: pointer;
+}

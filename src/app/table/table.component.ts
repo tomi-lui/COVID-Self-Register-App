@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter,Directive} from '@angular/core';
 import { PeopleService } from '../people.service';
-import { Observable } from 'rxjs'
+import { Person } from '../Person'
+
 
 @Component({
   selector: 'app-table',
@@ -9,13 +10,13 @@ import { Observable } from 'rxjs'
 })
 
 export class TableComponent implements OnInit {
-  // @Input() peopleInput
-  people
+  people: Array<Person>
+  name: any
+  sortedColumn: string
   @Output() infoId = new EventEmitter()
   @Output() removeId = new EventEmitter()
 
-  constructor(private ps: PeopleService) { 
-  }
+  constructor(private ps: PeopleService) {}
 
   ngOnInit(): void {
     //retrieve data, extract the "data" from each object and set it to the people variable
@@ -30,14 +31,24 @@ export class TableComponent implements OnInit {
     })
   }
 
-  handleRemoveButton(id){
-    console.log('Emitting removeId from table component');
+  handleRemoveButton(id:number): void{
+    console.log('id at handleRemoveButton() in table',id);
+    console.log(typeof id);
+    
     this.removeId.emit(id)
   }
 
-  
-  handleInfoButton(id){
-    console.log('Emitting infoId from table component');
-    this.infoId.emit(id)
+
+  search(): void {
+    if (this.name == "") {
+      this.ngOnInit()
+    } else {
+      this.people = this.people.filter( res => {
+        console.log(res);
+        
+        return res.name.toLocaleLowerCase().match(this.name.toLocaleLowerCase())
+      })
+    }
   }
+
 }

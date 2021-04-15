@@ -1,9 +1,7 @@
 /// <referenece <reference types="@types/googlemaps" />
-import { Component,ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PeopleService } from './people.service'
-import { RouterModule, Routes} from '@angular/router';
-import { Router } from '@angular/router'; 
-
+import { Person } from './Person'
 
 @Component({
   selector: 'app-root',
@@ -13,11 +11,10 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
 
   title = 'COVID-self-register-app';
-  displayForm = false
+  displayForm = true
   people;
   places;
-  constructor(private ps: PeopleService, private router: Router){
-  }
+  constructor(private ps: PeopleService){}
 
   async ngOnInit() {
     const allData = await this.ps.httpGetData().toPromise()
@@ -69,20 +66,15 @@ export class AppComponent implements OnInit {
     return placeArray
   }
 
-  
 
   handleNewReportButton(event){
     console.log('received report button at app component.',event);
     this.displayForm = true
   }
 
-  handleInfoButton(id){
+  async handleRemoveButton(id:number): Promise<void>{
     console.log('received info event at app component.',id);
-  }
-
-  async handleRemoveButton(id): Promise<void>{
-    console.log('received info event at app component.',id);
-    // this.ps.httpDelete(id.toString())
+    await this.ps.httpDelete(id)
     this.ps.refreshPage()
   }
 

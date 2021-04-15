@@ -1,6 +1,16 @@
+<nav 
+    class="navbar navbar-dark bg-dark mb-0"
+    *ngIf="!displayForm"
+>
+        <div class="container">
+            <span class="navbar-brand">Covid Self-Report</span>
+        </div>
+    </nav>
+
 
 <!-- <app-map></app-map> -->
 <app-leaflet-map
+    class="mt-0"
     *ngIf="!displayForm"
     [placesInput]="places"
 ></app-leaflet-map>

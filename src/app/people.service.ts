@@ -14,8 +14,7 @@ export class PeopleService implements OnInit {
   allData
   people
 
-  // people = this.httpGetAll()
-  // places = this.extractPlacesFromPeople(this.people)
+  // Data for testing without server:
   // people = [
 
   //     {
@@ -89,63 +88,6 @@ export class PeopleService implements OnInit {
     this.people = people
   }
 
-  extractPlacesFromPeople(peopleList){
-    // returns an array of objects containing information of each place  
-    var counts = {}
-    var place = []
-
-    //count the instances of places and store it.
-    
-    // Object.keys(peopleList).forEach((key) => {
-    //   console.log("inside the counting loop",peopleList[key]["place"]);
-      
-    //   counts[peopleList[key]["place"]] = counts[peopleList[key]["place"]] ? counts[peopleList[key]["place"]] + 1 : 1;
-    // });
-
-    peopleList.forEach(element => {
-      counts[element.place] = counts[element.place] ? counts[element.place] + 1 : 1;
-    });
-
-    // var place: Array<any>;
-    // //reduce array of objects so that there is only a single instace of place and add the counts attribute to it.
-    // Object.keys(peopleList).forEach((key) => {
-    //   const placeInformation = {}
-    //   placeInformation["place"] = peopleList[key]["place"]
-    //   placeInformation["position"] = peopleList[key]["position"]
-    //   placeInformation["count"] = peopleList[key]["count"]
-    //   place.push(placeInformation)
-    // })
-
-    peopleList.forEach(element => {
-      const placeInformation = {}
-      placeInformation["place"] = peopleList.place
-      placeInformation["position"] = peopleList.position
-      placeInformation["count"] = counts[element.place]
-      place.push(placeInformation)
-    });
-
-
-    // // remove duplicates
-    // var tempPlacesCount = {}
-    // place = place.filter( placeInfo => {
-    //   tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
-    //   if (tempPlacesCount[placeInfo.place] == 1) {
-    //     return placeInfo
-    //   }
-    // })
-
-
-    // remove duplicates
-    var tempPlacesCount = {}
-    place = place.filter( placeInfo => {
-      tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
-      if (tempPlacesCount[placeInfo.place] == 1) {
-        return placeInfo
-      }
-    })
-
-    return place
-  }
 
 
   async httpPost(newPerson): Promise<void>{
@@ -164,54 +106,27 @@ export class PeopleService implements OnInit {
   }
 
 
-  httpDelete(key:string){
+  async httpDelete(key:number): Promise<Boolean>{
+    var successful = false
     this.http.delete(this.URL + key,
     {observe:'response'}
     ).subscribe(
-      data => {        
+      data => {
+        if (data){
+          console.log(data);
+          successful = true
+        }
       }
     )
     console.log(`Key of ${key} deleted.`);
+    return successful
   }
 
 
-  httpGetData() {
+  httpGetData(): Observable<any> {
     return this.http.get<any>(this.URL)
   }
-  
-  // httpGetDataTest() {
-  //   return this.http.get<any>(this.URL).pipe(
-  //     map( element => {
 
-  //     })
-  //   )
-  // }
-
-  getPlaces(){
-    return this.extractPlacesFromPeople(this.people)
-  }
-
-
-  add(newPerson){
-    // this.people.push(newPerson)
-    // return newPerson
-  }
-
-  delete(){
-
-  }
-
-  httpGetDataTest(): Observable<any>{
-    var res = this.http.get(this.URL).pipe(map( d => this.modify(d)))
-    console.log(res);
-    return res
-    
-  }
-
-  modify(data){
-    console.log(data);
-    return data.data
-  }
 
   refreshPage():void {
     window.location.reload()

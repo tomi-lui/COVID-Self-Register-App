@@ -12,7 +12,7 @@ import { FormPageComponent } from './form-page/form-page.component';
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule } from '@angular/forms';
 import { PeopleService } from './people.service';
-
+import { SortPipe } from './pipes/sort.pipe';
 
 @NgModule({
   declarations: [
@@ -22,6 +22,7 @@ import { PeopleService } from './people.service';
     NewReportButtonComponent,
     LeafletMapComponent,
     FormPageComponent,
+    SortPipe,
   ],
 
   imports: [

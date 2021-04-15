@@ -1,19 +1,21 @@
 
 
 <div ngClass="" >
- 
+
     <table class="table">
         <tr ngClass="thead-dark">
-            <th>Location</th>
-            <th>Person Reported</th>
-            <th>Date of visit</th>
+            <th></th>
+            <th class="sortable" sortable="place" (click)="sortedColumn = 'place'">Location&nbsp;<i class="fa fa-sort"></i></th>
+            <th class="sortable" sortable="name" (click)="sortedColumn = 'name'">Person Reported&nbsp;<i class="fa fa-sort"></i></th>
+            <th class="sortable" sortable="date" (click)="sortedColumn = 'date'">Date of visit&nbsp;<i class="fa fa-sort"></i></th>
             <th></th>
             <th></th>
         </tr>
 
         <tr 
-            *ngFor="let person of people"
-        >
+            *ngFor="let person of people | sort : sortedColumn"
+        >   
+            <td></td>
             <td>{{ person.place }}</td>
             <td><b>{{ person.name | titlecase }}</b></td>
             <td>{{ person.date | date }}</td>
@@ -30,7 +32,7 @@
                     name:   <b>{{ person.name | titlecase }}</b><br>
                     phone:  <b>{{ person.phone }}<br></b>
                     place:  <b>{{ person.place }}<br></b>
-                    date:   <b>{{ person.date  }}<br></b>
+                    date:   <b>{{ person.date | date  }}<br></b>
                     notes:  <b>{{ person.notes }}<br></b>
                 </ng-template>
                 <button type="button" class="btn btn-info" [ngbPopover]="popContent" popoverTitle="More Information">
