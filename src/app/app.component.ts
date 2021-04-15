@@ -11,7 +11,7 @@ import { Person } from './Person'
 export class AppComponent implements OnInit {
 
   title = 'COVID-self-register-app';
-  displayForm = true
+  displayForm = false
   people;
   places;
   constructor(private ps: PeopleService){}
