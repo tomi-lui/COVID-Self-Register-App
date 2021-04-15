@@ -7,7 +7,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class SortPipe implements PipeTransform {
 
   transform(list: any[], column:string): any[] {
-    console.log(column);
     
     let sortedArray = list.sort((a,b) => {
       if (a[column] > b[column]){
