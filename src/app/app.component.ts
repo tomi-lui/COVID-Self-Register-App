@@ -1,7 +1,10 @@
 /// <referenece <reference types="@types/googlemaps" />
 import { Component,ViewChild, AfterViewInit, OnInit } from '@angular/core';
-import { Router } from '@angular/router'
 import { PeopleService } from './people.service'
+import { RouterModule, Routes} from '@angular/router';
+import { Router } from '@angular/router'; 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,16 +16,28 @@ export class AppComponent implements OnInit {
   displayForm = false
   people;
   places;
-  constructor(private ps: PeopleService){
-
+  constructor(private ps: PeopleService, private router: Router){
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const allData = await this.ps.httpGetData().toPromise()
+    this.extractObjectsFromAllData(allData)
+    this.places = this.extractPlacesFromPeople(this.people)
+  }
+
+  extractObjectsFromAllData(allData): void{
+      var people = []
+      allData.forEach(element => {
+        var temp = {}
+        temp = element.data
+        people.push(temp)
+      });
+      this.people = people
   }
 
   extractPlacesFromPeople(peopleList){
     //This function returns a list of object with place, position, and count
-    //to pass down to the leaflet-map component to display markers.
+    //to pass down to the form component.
 
     var counts = {}
 
@@ -41,17 +56,16 @@ export class AppComponent implements OnInit {
     })
 
     // remove duplicates
-    var tempPlacesCount = {}
+    var setOfPlaces = new Set()
     placeArray = placeArray.filter( placeInfo => {
-      tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
-      if (tempPlacesCount[placeInfo.place] == 1) {
+      if(setOfPlaces.has(placeInfo.place)){
+        return
+      } else {
+        setOfPlaces.add(placeInfo.place)
         return placeInfo
       }
     })
 
-    console.log(counts);
-    console.log(placeArray);
-    
     return placeArray
   }
 
@@ -66,17 +80,19 @@ export class AppComponent implements OnInit {
     console.log('received info event at app component.',id);
   }
 
-  handleRemoveButton(id){
+  async handleRemoveButton(id): Promise<void>{
     console.log('received info event at app component.',id);
+    // this.ps.httpDelete(id.toString())
+    this.ps.refreshPage()
   }
 
-  handleAddNewPerson(person){
+  async handleAddNewPerson(person): Promise<void>{
     console.log("received from app component, at handleAddNewPerson.",person)
-    this.people.push(person)
-    this.places = this.extractPlacesFromPeople(this.people)
+    await this.ps.httpPost(person)
   }
   
   displayHomePage(){
     this.displayForm = false
   }
+
 }

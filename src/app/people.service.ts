@@ -1,5 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
+import { map } from 'rxjs/operators'
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router'; 
 
 @Injectable({
   providedIn: 'root'
@@ -53,93 +56,12 @@ export class PeopleService implements OnInit {
   //     }
   // ]
 
-  constructor(private http: HttpClient) {
-    // this.httpPost(this.people[3])
-    // this.httpGetAll() //will populate the allData variable
-    // this.removeKeysFromAllData(this.allData) //will populate the people variable
-    // console.log(this.allData);
+  constructor(private http: HttpClient, private router: Router) {
   }
 
 
   ngOnInit(){
-    // this.httpGetAll() //will populate the allData variable
-    // this.removeKeysFromAllData(this.allData) //will populate the people variable
-    // console.log(this.allData);
-    
   }
-
-
-  // httpGetAll(): Array<any>{
-  //   // Gets all the data from the database
-
-  //   var allData = []
-  //   var filteredData = []
-  //   var counts = {}
-  //   var place = []
-  //   var places
-
-
-  //   this.http.get<any>(this.URL).subscribe(
-
-  //     (data) => {
-
-  //       // console.log("very first data:",data);
-        
-  //       Object.keys(data).forEach( key => {
-  //         // Count the number cases per location, store it in counts
-
-  //         var element = data[key]["data"]
-  //         counts[element["place"]] = counts[element["place"]] ? counts[element["place"]] + 1 : 1
-  //       })
-        
-        
-  //       Object.keys(data).forEach(key => {
-  //         allData.push(data[key])
-  //         filteredData.push(data[key]["data"])
-
-  //       });
-
-
-  //       Object.keys(data).forEach( key => {
-  //         // push an object containing only place, position and counts
-
-  //         var person = data[key]["data"]
-  //         // console.log("person",person);
-          
-  //         const placeInformation = {}
-  //         placeInformation["place"] = person.place
-  //         placeInformation["position"] = person.position
-  //         placeInformation["count"] = counts[person.place]
-            
-  //         place.push(placeInformation)
-
-  //       })
-
-        
-  //       place = place.filter( placeInfo => {
-  //         // console.log("placeInfo",placeInfo);
-          
-  //         var tempPlacesCount = {}
-  //         tempPlacesCount[placeInfo.place] = tempPlacesCount[placeInfo.place] ? tempPlacesCount[placeInfo] + 1 : 1;
-  //         if (tempPlacesCount[placeInfo.place] == 1) {
-  //           return placeInfo
-  //         }
-  //       })
-
-  //       places = place
-  //       // console.log("counts",counts);
-  //       // console.log("place",place);
-  //     }
-  //   )
-
-  //   console.log("allData",allData);
-  //   // console.log("filteredData", filteredData);
-  //   // console.log("place",place);
-  //   // console.log("places",places);
-    
-    
-  //   return [allData, filteredData, place]
-  // }
 
   httpGetAll():void{
     // Gets all the data from the server
@@ -225,17 +147,10 @@ export class PeopleService implements OnInit {
     return place
   }
 
-  returnDataOnly(data){
-      //retrieve data, extract the "data" from each object and set it to the people variable
-      var people = []
-      data.forEach(element => {
-        var temp = {}
-        temp = element.data
-        people.push(temp)
-      });
-  }
 
-  httpPost(newPerson){
+  async httpPost(newPerson): Promise<void>{
+    newPerson["id"] = (new Date()).getTime()
+
     this.http.post<any>(this.URL, {
       "key": (new Date()).getTime(),
       "data": newPerson
@@ -243,7 +158,7 @@ export class PeopleService implements OnInit {
     {observe:'response'}
     ).subscribe(
       (data) => {
-        console.log("HttpPost",data);
+        return data
       }
     )
   }
@@ -286,5 +201,20 @@ export class PeopleService implements OnInit {
 
   }
 
+  httpGetDataTest(): Observable<any>{
+    var res = this.http.get(this.URL).pipe(map( d => this.modify(d)))
+    console.log(res);
+    return res
+    
+  }
+
+  modify(data){
+    console.log(data);
+    return data.data
+  }
+
+  refreshPage():void {
+    window.location.reload()
+  }
 
 }

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, Output,EventEmitter, Input } from '@angular/core';
 import * as L from 'leaflet'
+import { PeopleService } from '../people.service';
 
 
 // need to add to make leaflet icons work
@@ -44,7 +45,7 @@ export class FormPageComponent implements OnInit,AfterViewInit {
   public currentDateObj:any = {};
 
 
-  constructor() { }
+  constructor(private ps:PeopleService) { }
 
   ngAfterViewInit(): void { 
     //Make Leaflet Map work
@@ -107,12 +108,13 @@ export class FormPageComponent implements OnInit,AfterViewInit {
           phone:val.phone,
           date:this.selectedDate,
           place:val.newPlace,
-          position: this.newLocation
+          position: this.newLocation,
+          notes: val.notes
         })
-
         //return to homepage after submission
-        this.handleDisplayHomePage()
+        this.ps.refreshPage()
       }
+
     } else {  
       //Get the cordinate location for the selected cordinate name
       const location = (this.placesInput.filter( (value) => {
@@ -126,20 +128,21 @@ export class FormPageComponent implements OnInit,AfterViewInit {
         phone:val.phone,
         date:this.selectedDate,
         place:val.place,
-        position: location[0].position
+        position: location[0].position,
+        notes:val.notes
       })
 
       //Return to homepage after submition
-      this.handleDisplayHomePage()
+      this.ps.refreshPage()
     }
   }
 
-  addNewPerson(person){
+  addNewPerson(person):void {
     //pass object to APP component
     this.newPerson.emit(person)
   }
 
-  handleAddNewLocationButton(){
+  handleAddNewLocationButton(): void{
     //capture wether or not user wants to add new person
     if (this.addNewLocation == true){
       this.addNewLocation = false
@@ -150,7 +153,7 @@ export class FormPageComponent implements OnInit,AfterViewInit {
     
   }
 
-  onSelect(evt){
+  onSelect(evt): void{
     //get the date input from the form
     this.selectedDate = new Date(evt.year,evt.month-1,evt.day);
     console.log(this.selectedDate.getTime());
