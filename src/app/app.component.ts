@@ -17,9 +17,15 @@ export class AppComponent implements OnInit {
   constructor(private ps: PeopleService){}
 
   async ngOnInit() {
-    const allData = await this.ps.httpGetData().toPromise()
-    this.extractObjectsFromAllData(allData)
+    // these functions are used when this app is connected to a database
+    // const allData = await this.ps.httpGetData().toPromise()
+    // this.extractObjectsFromAllData(allData)
+    // this.places = this.extractPlacesFromPeople(this.people)
+
+    this.people = this.ps.getPeople()
     this.places = this.extractPlacesFromPeople(this.people)
+    console.log(this.places);
+    
   }
 
   extractObjectsFromAllData(allData): void{

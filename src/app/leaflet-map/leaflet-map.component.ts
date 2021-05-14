@@ -37,7 +37,7 @@ export class LeafletMapComponent implements AfterViewInit {
   allData
   private map; //leaflet map
   markerObjects; //this list will store leaflet marker objects
-
+  people;
   constructor(private ps: PeopleService) {
   }
 
@@ -45,8 +45,15 @@ export class LeafletMapComponent implements AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> { 
 
-    const res = await this.ps.httpGetData().toPromise()
-    this.convertToPlacesArray(res)
+
+    // These funcitons are only run of app is connected to database
+    // const res = await this.ps.httpGetData().toPromise()
+    // this.convertToPlacesArray(res)
+
+    // OFFLINE
+    this.people = this.ps.getPeople()
+    this.convertToPlacesArrayOFFLINE(this.people)
+
     // console.log(this.allData);
     
      
@@ -138,4 +145,39 @@ export class LeafletMapComponent implements AfterViewInit {
     this.places = place
     }
 
+  convertToPlacesArrayOFFLINE(allData): void{
+    // create an array containing the number of instances of each place reported
+
+    const dataOnly = allData 
+    var counts = {}
+    var place = []
+
+    dataOnly.forEach(element => {
+        // console.log(element["place"]);
+        counts[element["place"]] = counts[element["place"]] ? counts[element["place"]] + 1 : 1;
+    })
+
+    dataOnly.forEach(element => {
+        const placeInformation = {}
+        placeInformation["place"] = dataOnly["place"]
+        placeInformation["position"] = dataOnly["position"]
+        placeInformation["count"] = counts[element["place"]]
+        place.push(placeInformation)
+    });
+
+    // remove duplicates
+    var tempPlacesCount = {}
+    place = dataOnly.filter( placeInfo => {
+      
+      tempPlacesCount[placeInfo["place"]] = tempPlacesCount[placeInfo["place"]] ? tempPlacesCount[placeInfo["place"]] + 1 : 1;
+      if (tempPlacesCount[placeInfo["place"]] == 1) {
+        placeInfo["count"] = counts[placeInfo["place"]]
+        return placeInfo
+      }
+    })
+    
+    this.places = place
+    console.log(this.places);
+    
+    }
 }

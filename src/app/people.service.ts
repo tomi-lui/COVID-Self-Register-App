@@ -12,52 +12,55 @@ export class PeopleService implements OnInit {
 
   URL = "https://218.selfip.net/apps/AInYTcCKgz/collections/people/documents/"
   allData
-  people
+  // people
 
   // Data for testing without server:
-  // people = [
+  people = [
 
-  //     {
-  //       id:123445153124,
-  //       name:'Tomi',
-  //       phone:7787133311,
-  //       place:'Metrotown',
-  //       date: (new Date()).getTime(),
-  //       notes:'I dont know what to write here ',
-  //       position:{lat: 49.2276, lng: -123.0076}
-  //     },
-  //     {
-  //       id:132435123512,
-  //       name:'Jack',
-  //       phone:7787133311,
-  //       place:'Surrey',
-  //       date: (new Date()).getTime(),
-  //       notes:'Bhahahah this is working',
-  //       position:{lat: 49.1867, lng: -122.8490}
-  //     },
-  //     {
-  //       id:132513251325,
-  //       name:'Bill',
-  //       phone:7787133311,
-  //       place:'Metrotown',
-  //       date: (new Date()).getTime(),
-  //       notes:'nothing yet',
-  //       position:{lat: 49.2276, lng: -123.0076}
-  //     },
-  //     {
-  //       id:(new Date()).getTime(),
-  //       name:"Peter",
-  //       phone:7783181699,
-  //       place:"Metrotown",
-  //       date:(new Date()).getTime(),
-  //       notes:"blah",
-  //       position:{lat: 49.2276, lng: -123.0076}
-  //     }
-  // ]
+      {
+        id:123445153124,
+        name:'Tomi',
+        phone:7787133311,
+        place:'Metrotown',
+        date: (new Date()).getTime(),
+        notes:'I dont know what to write here ',
+        position:{lat: 49.2276, lng: -123.0076}
+      },
+      {
+        id:132435123512,
+        name:'Jack',
+        phone:7787133311,
+        place:'Surrey',
+        date: (new Date()).getTime(),
+        notes:'Bhahahah this is working',
+        position:{lat: 49.1867, lng: -122.8490}
+      },
+      {
+        id:132513251325,
+        name:'Bill',
+        phone:7787133311,
+        place:'Metrotown',
+        date: (new Date()).getTime(),
+        notes:'nothing yet',
+        position:{lat: 49.2276, lng: -123.0076}
+      },
+      {
+        id:(new Date()).getTime(),
+        name:"Peter",
+        phone:7783181699,
+        place:"Metrotown",
+        date:(new Date()).getTime(),
+        notes:"blah",
+        position:{lat: 49.2276, lng: -123.0076}
+      }
+  ]
 
   constructor(private http: HttpClient, private router: Router) {
   }
 
+  getPeople(){
+    return this.people
+  }
 
   ngOnInit(){
   }
