@@ -20,10 +20,10 @@ export class PeopleService implements OnInit {
       {
         id:123445153124,
         name:'Tomi',
-        phone:7787133311,
+        phone:7787100011,
         place:'Metrotown',
         date: (new Date()).getTime(),
-        notes:'I dont know what to write here ',
+        notes:'Wear Masks!',
         position:{lat: 49.2276, lng: -123.0076}
       },
       {
