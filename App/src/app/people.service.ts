@@ -48,10 +48,19 @@ export class PeopleService implements OnInit {
         id:(new Date()).getTime(),
         name:"Peter",
         phone:7783181699,
-        place:"Metrotown",
+        place:"Downtown",
         date:(new Date()).getTime(),
         notes:"blah",
-        position:{lat: 49.2276, lng: -123.0076}
+        position:{lat: 49.2887, lng: -123.1112}
+      },
+      {
+        id:(new Date()).getTime(),
+        name:"Vivian",
+        phone:7783181699,
+        place:"UBC",
+        date:(new Date()).getTime(),
+        notes:"Wear Masks!",
+        position:{lat: 49.2606, lng: -123.2460}
       }
   ]
 

@@ -147,7 +147,8 @@ export class LeafletMapComponent implements AfterViewInit {
 
   convertToPlacesArrayOFFLINE(allData): void{
     // create an array containing the number of instances of each place reported
-
+    console.log(allData);
+    
     const dataOnly = allData 
     var counts = {}
     var place = []
